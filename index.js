@@ -3,28 +3,44 @@ const input = `
 ................
 ...F.F..........
 ....X...........
-...F.F..........`;
+...F.F..........`.trim().split("\n");
 
 const patterns = {
   Cross: `
 F.F
 .X.
-F.F`,
+F.F`.trim().split("\n"),
   Bend: `
 F..
 F..
-XXX`,
+XXX`.trim().split("\n"),
   Arrow: `
 S.W
 SW.
-SSS`
+SSS`.trim().split("\n")
 };
 
 function match(input, patterns) {
-  return {
-    pattern: 'Cross',
-    left: 4,
-    top: 2
+  const iWidth = input[0].length;
+  const iHeight = input.length;
+
+  for (const [pattern, pstr] of Object.entries(patterns)) {
+    const pWidth = pstr[0].length;
+    const pHeight = pstr.length;
+
+    for (let x = 0; x <= iWidth - pWidth; x++) {
+      for (let y = 0; y <= iHeight - pHeight; y++) {
+        const subInput = input.slice(y, y + pHeight).map(line => line.substr(x, pWidth));
+
+        if (subInput.join() === pstr.join()) {
+          return {
+            pattern,
+            left: x + 1,
+            top: y + 1
+          }
+        }
+      }
+    }
   }
 }
 
